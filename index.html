@@ -1,14 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>ESP32 Relay Control Dashboard</title>
+  <title>Controle de Led_RGB</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #e0e0e0;
+      --primary-color: #3a7bd5;
+      --secondary-color: #4CAF50;
+      --danger-color: #f44336;
+      --disabled-color: #555;
+      --border-color: #333;
+      --shadow-color: rgba(0,0,0,0.3);
+    }
+    
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background-color: #f9f9f9;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       margin: 0;
       padding: 0 10px 40px;
       display: flex;
@@ -22,32 +35,35 @@
     }
     .relay-card {
       display: inline-block;
-      background-color: white;
+      background-color: var(--card-bg);
       padding: 20px;
       margin: 15px;
       border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px var(--shadow-color);
       width: 220px;
       vertical-align: top;
+      border: 1px solid var(--border-color);
     }
     .relay-card h2 {
       margin-bottom: 10px;
       font-size: 1.3rem;
+      color: var(--text-color);
     }
     .relay-card p {
       margin-bottom: 10px;
       font-size: 1rem;
+      color: var(--text-color);
     }
     .relay-card button {
       padding: 10px 20px;
       border: none;
       border-radius: 10px;
       color: white;
-      background-color: blue;
+      background-color: var(--primary-color);
       cursor: pointer;
       font-size: 16px;
-	  width: 90%;
-      transition: opacity 0.3s ease;
+      width: 90%;
+      transition: all 0.3s ease;
     }
     .relay-card button:hover {
       opacity: 0.8;
@@ -63,16 +79,16 @@
       margin: 15px auto;
       display: block;
       color: white;
-      transition: opacity 0.3s ease;
+      transition: all 0.3s ease;
     }
     #allOffBtn {
-      background-color: #d32f2f;
+      background-color: var(--danger-color);
     }
     #allOffBtn:hover {
       opacity: 0.8;
     }
     #logoutBtn {
-      background-color: #555;
+      background-color: var(--disabled-color);
     }
     #logoutBtn:hover {
       opacity: 0.8;
@@ -85,28 +101,31 @@
     #loginForm {
       max-width: 400px;
       margin: 80px auto 20px;
-      background: white;
+      background: var(--card-bg);
       padding: 30px 20px;
       border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px var(--shadow-color);
+      border: 1px solid var(--border-color);
     }
     #loginForm input {
       width: 100%;
       padding: 12px 15px;
       margin: 10px 0 20px;
       font-size: 1rem;
-      border: 1.5px solid #ccc;
+      border: 1.5px solid var(--border-color);
       border-radius: 10px;
       box-sizing: border-box;
       outline-offset: 2px;
       transition: border-color 0.3s ease;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
     #loginForm input:focus {
-      border-color: #1e88e5;
+      border-color: var(--primary-color);
     }
     #loginForm button {
       width: 100%;
-      background-color: #1e88e5;
+      background-color: var(--primary-color);
       color: white;
       padding: 12px;
       font-size: 18px;
@@ -138,7 +157,8 @@
     }
     footer {
       font-size: 0.9rem;
-      color: #666;
+      color: var(--text-color);
+      opacity: 0.7;
       padding: 10px 0;
       margin-top: 40px;
     }
@@ -146,49 +166,49 @@
 </head>
 <body>
 
-  <h1>ESP32 Led_RGB Control Dashboard</h1>
+  <h1>Controle de Led_RGB ESP32</h1>
 
-  <!-- Login form -->
+  <!-- Formulário de login -->
   <div id="loginForm">
-    <input type="email" id="email" placeholder="Enter Email" required />
-    <input type="password" id="password" placeholder="Enter Password" required />
-    <button id="loginBtn">Login</button>
+    <input type="email" id="email" placeholder="Digite seu e-mail" required />
+    <input type="password" id="password" placeholder="Digite sua senha" required />
+    <button id="loginBtn">Entrar</button>
   </div>
 
-  <!-- Dashboard -->
+  <!-- Painel de controle -->
   <div id="dashboard">
     <div class="relay-container">
       <div class="relay-card">
         <h2>Vermelho</h2>
-        <p>Status: <span id="status1">Loading...</span></p>
-        <button id="btn1">Toggle</button>
+        <p>Status: <span id="status1">Carregando...</span></p>
+        <button id="btn1">Alternar</button>
       </div>
 
       <div class="relay-card">
         <h2>Verde</h2>
-        <p>Status: <span id="status2">Loading...</span></p>
-        <button id="btn2">Toggle</button>
+        <p>Status: <span id="status2">Carregando...</span></p>
+        <button id="btn2">Alternar</button>
       </div>
 
       <div class="relay-card">
         <h2>Azul</h2>
-        <p>Status: <span id="status3">Loading...</span></p>
-        <button id="btn3">Toggle</button>
+        <p>Status: <span id="status3">Carregando...</span></p>
+        <button id="btn3">Alternar</button>
       </div>
 
       <div class="relay-card">
-        <h2>Relay 4</h2>
-        <p>Status: <span id="status4">Loading...</span></p>
-        <button id="btn4">Toggle</button>
+        <h2>Todas as Cores</h2>
+        <p>Status: <span id="status4">Carregando...</span></p>
+        <button id="btn4">Alternar</button>
       </div>
     </div>
 
-    <button id="allOffBtn">All OFF</button>
-    <button id="logoutBtn">Logout</button>
+    <button id="allOffBtn">Desligar Todos</button>
+    <button id="logoutBtn">Sair</button>
   </div>
 
   <footer>
-    Created by Tech StudyCell
+    Criado por --> MS_Testes_2025 <--
   </footer>
 
   <!-- Firebase SDKs -->
@@ -197,7 +217,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
 
   <script>
-    // Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAsJNez92TtiBSPkqgwS-qCbes7sI0YN4w",
   authDomain: "esp32-relay-control-ms-01.firebaseapp.com",
@@ -210,7 +229,7 @@ const firebaseConfig = {
 
     firebase.initializeApp(firebaseConfig);
 
-    // Predefined login credentials (can be replaced with your logic)
+    // Credenciais de login pré-definidas (pode ser substituído pela sua lógica)
     const allowedEmail = "mariosgs.agst@gmail.com";
     const allowedPassword = "@gst92MSGS";
 
@@ -223,25 +242,25 @@ const firebaseConfig = {
       const password = document.getElementById("password").value;
 
       if (!email || !password) {
-        alert("Please enter email and password.");
+        alert("Por favor, insira e-mail e senha.");
         return;
       }
 
-      // Check hardcoded credentials first
+      // Verifica as credenciais fixas primeiro
       if(email === allowedEmail && password === allowedPassword){
-        // Sign in with Firebase
+        // Autentica com Firebase
         firebase.auth().signInWithEmailAndPassword(email, password)
           .then(userCredential => {
-            console.log("Signed in as", userCredential.user.email);
+            console.log("Logado como", userCredential.user.email);
             loginForm.style.display = "none";
             dashboard.style.display = "block";
             startRelayControl();
           })
           .catch(error => {
-            alert("Firebase login failed: " + error.message);
+            alert("Falha no login com Firebase: " + error.message);
           });
       } else {
-        alert("Invalid email or password.");
+        alert("E-mail ou senha inválidos.");
       }
     });
 
@@ -262,8 +281,9 @@ const firebaseConfig = {
 
         relayRef.on("value", (snapshot) => {
           const state = snapshot.val();
-          statusText.innerText = state ? "ON" : "OFF";
-          toggleButton.style.backgroundColor = state ? "green" : "blue";
+          statusText.innerText = state ? "LIGADO" : "DESLIGADO";
+          toggleButton.style.backgroundColor = state ? "var(--secondary-color)" : "var(--primary-color)";
+          toggleButton.textContent = state ? "Desligar" : "Ligar";
         });
 
         toggleButton.onclick = () => {
@@ -289,7 +309,7 @@ const firebaseConfig = {
           document.getElementById("password").value = "";
         })
         .catch(error => {
-          alert("Logout failed: " + error.message);
+          alert("Falha ao sair: " + error.message);
         });
     };
   </script>
